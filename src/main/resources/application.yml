@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: deepseek-doctor
+  profiles:
+    active: dev # select dev or prod yaml files
+  ai:
+    ollama:
+      base-url: http://127.0.0.1:11434
+      chat:
+        model: deepseek-r1:14b

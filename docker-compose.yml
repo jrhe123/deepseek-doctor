@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: doctor_mysql_container
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: changeme  # 设置 root 用户密码
+      MYSQL_DATABASE: doctor     # 初始化时创建的数据库
+      MYSQL_USER: doctor         # 创建的普通用户
+      MYSQL_PASSWORD: doctor_password # 普通用户的密码
+    volumes:
+      - ./mysql_data:/var/lib/mysql  # 持久化 MySQL 数据到当前文件夹
+      - ./init-scripts:/docker-entrypoint-initdb.d  # 初始化脚本目录

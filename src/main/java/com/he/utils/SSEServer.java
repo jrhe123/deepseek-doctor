@@ -7,6 +7,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 @Slf4j
@@ -16,6 +17,8 @@ public class SSEServer {
     // 问题：sseEmitter 能不能放在redis中和userId进行关联
     // 问题：sseEmitter 如何在集群Springboot中存在
     private static Map<String, SseEmitter> sseClients = new ConcurrentHashMap<>();
+
+    private static AtomicInteger onlineCount = new AtomicInteger(0);
 
     public static void sendMessage(String userId, String message, SSEMsgType msgType) {
         if (CollectionUtils.isEmpty(sseClients)) {
@@ -38,10 +41,24 @@ public class SSEServer {
         });
     }
 
+    public static void stopServer(String userId) {
+        if (CollectionUtils.isEmpty(sseClients)) {
+            return;
+        }
+        if (sseClients.containsKey(userId)) {
+            SseEmitter sseEmitter = sseClients.get(userId);
+            sseEmitter.complete();
+            log.info("连接关闭成功，被关闭的用户: {}", userId);
+            removeConnection(userId);
+        } else {
+            log.info("用户id: {} 不存在sse连接", userId);
+        }
+    }
+
     public static void sendEmitterMessage(SseEmitter sseEmitter,
-                                    String userId,
-                                    String message,
-                                    SSEMsgType msgType) {
+                                          String userId,
+                                          String message,
+                                          SSEMsgType msgType) {
         try {
             SseEmitter.SseEventBuilder msg = SseEmitter.event()
                     .id(userId)
@@ -65,11 +82,16 @@ public class SSEServer {
         sseClients.put(userId, sseEmitter);
         log.info("建立新的sse连接，用户id: {}", userId);
 
+        onlineCount.getAndIncrement();
+
         return sseEmitter;
     }
 
     public static void removeConnection(String userId) {
         sseClients.remove(userId);
+
+        onlineCount.getAndDecrement();
+
         log.info("移除sse连接，用户id: {}", userId);
     }
 
@@ -93,6 +115,10 @@ public class SSEServer {
             log.info("超时sse连接，用户id: {}", userId);
             removeConnection(userId);
         };
+    }
+
+    public static int getOnlineCount() {
+        return onlineCount.intValue();
     }
 
 }

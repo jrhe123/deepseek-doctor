@@ -32,4 +32,15 @@ public class SSEController {
         SSEServer.sendMessageToAllUsers(message);
         return "OK";
     }
+
+    @GetMapping("stop")
+    public Object stopServer(@RequestParam String userId) {
+        SSEServer.stopServer(userId);
+        return "OK";
+    }
+
+    @GetMapping("getOnlineCount")
+    public Object getOnlineCount() {
+        return SSEServer.getOnlineCount();
+    }
 }

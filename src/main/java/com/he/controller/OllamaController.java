@@ -31,6 +31,7 @@ public class OllamaController {
         return this.ollamaService.aiOllamaChat(message);
     }
 
+    // http://localhost:8080/ollama/ai/generateStream
     @GetMapping("/ai/generateStream")
     public List<String> generateStream(@RequestParam(value = "message", defaultValue = "Tell me a joke") String message) {
         return this.ollamaService.aiOllamaStream(message);

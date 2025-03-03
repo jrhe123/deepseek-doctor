@@ -36,7 +36,7 @@ public class OllamaServiceImpl implements OllamaService {
         Flux<ChatResponse> streamResponse = this.chatModel.stream(prompt);
         List<String> list = streamResponse.toStream().map(chatResponse -> {
             String text = chatResponse.getResult().getOutput().getText();
-            log.info(text);
+            // log.info(text);
 
             return text;
         }).collect(Collectors.toList());

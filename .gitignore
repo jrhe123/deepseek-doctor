@@ -39,3 +39,5 @@ build/
 
 # MySQL
 mysql_data/
+family-doctor/img
+family-doctor/libs

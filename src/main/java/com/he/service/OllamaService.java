@@ -10,4 +10,6 @@ public interface OllamaService {
     Object aiOllamaChat(String message);
 
     List<String> aiOllamaStream(String message);
+
+    void aiOllamaStreamV2(String userName, String message);
 }

@@ -1,6 +1,8 @@
 package com.he.service.impl;
 
 import com.he.service.OllamaService;
+import com.he.utils.SSEMsgType;
+import com.he.utils.SSEServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -37,9 +39,23 @@ public class OllamaServiceImpl implements OllamaService {
         List<String> list = streamResponse.toStream().map(chatResponse -> {
             String text = chatResponse.getResult().getOutput().getText();
             // log.info(text);
-
             return text;
         }).collect(Collectors.toList());
         return list;
+    }
+
+    @Override
+    public void aiOllamaStreamV2(String userName, String message) {
+        Prompt prompt = new Prompt(new UserMessage(message));
+        Flux<ChatResponse> streamResponse = this.chatModel.stream(prompt);
+        List<String> list = streamResponse.toStream().map(chatResponse -> {
+            String text = chatResponse.getResult().getOutput().getText();
+
+            SSEServer.sendMessage(userName, text, SSEMsgType.ADD);
+
+            return text;
+        }).collect(Collectors.toList());
+
+        SSEServer.sendMessage(userName, "DONE", SSEMsgType.FINISH);
     }
 }

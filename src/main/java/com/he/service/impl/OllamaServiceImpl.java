@@ -1,8 +1,11 @@
 package com.he.service.impl;
 
+import com.he.service.ChatRecordService;
 import com.he.service.OllamaService;
+import com.he.utils.ChatType;
 import com.he.utils.SSEMsgType;
 import com.he.utils.SSEServer;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -20,6 +23,9 @@ import java.util.stream.Collectors;
 public class OllamaServiceImpl implements OllamaService {
 
     private final OllamaChatModel chatModel;
+
+    @Resource
+    private ChatRecordService chatRecordService;
 
     @Autowired
     public OllamaServiceImpl(OllamaChatModel chatModel) {
@@ -46,6 +52,9 @@ public class OllamaServiceImpl implements OllamaService {
 
     @Override
     public void aiOllamaStreamV2(String userName, String message) {
+        // save user message
+        chatRecordService.saveChatRecord(userName, message, ChatType.USER);
+
         Prompt prompt = new Prompt(new UserMessage(message));
         Flux<ChatResponse> streamResponse = this.chatModel.stream(prompt);
         List<String> list = streamResponse.toStream().map(chatResponse -> {
@@ -57,5 +66,12 @@ public class OllamaServiceImpl implements OllamaService {
         }).collect(Collectors.toList());
 
         SSEServer.sendMessage(userName, "DONE", SSEMsgType.FINISH);
+
+        // save ai message
+        String htmlResult = "";
+        for (String s : list) {
+            htmlResult += s;
+        }
+        chatRecordService.saveChatRecord(userName, htmlResult, ChatType.BOT);
     }
 }

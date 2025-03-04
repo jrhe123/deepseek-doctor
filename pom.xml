@@ -59,7 +59,7 @@
             <version>1.0.0-M6</version>
         </dependency>
 
-<!--                <dependency>-->
+<!--        <dependency>-->
 <!--            <groupId>io.springboot.ai</groupId>-->
 <!--            <artifactId>spring-ai-ollama</artifactId>-->
 <!--            <version>1.0.3</version>-->
@@ -76,29 +76,29 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.mysql</groupId>-->
-<!--            <artifactId>mysql-connector-j</artifactId>-->
-<!--            <version>8.0.33</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.33</version>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--            <version>3.5.10.1</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>org.mybatis</groupId>-->
-<!--                    <artifactId>mybatis-spring</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.5.10.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.mybatis</groupId>-->
-<!--            <artifactId>mybatis-spring</artifactId>-->
-<!--            <version>3.0.4</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>3.0.4</version>
+        </dependency>
 
     </dependencies>
 
